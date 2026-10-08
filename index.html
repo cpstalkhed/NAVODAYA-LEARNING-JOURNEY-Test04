@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#111827">
+<title>NAVODAYA LEARNING JOURNEY — MAT-04 संख्या मालिका</title>
+<style>
+:root{
+  --bg:#eef2ff; --card:#fff; --ink:#172033; --muted:#64748b;
+  --primary:#4f46e5; --primary2:#7c3aed; --green:#16a34a; --red:#dc2626;
+  --amber:#d97706; --line:#e2e8f0; --soft:#f8fafc; --shadow:0 14px 35px rgba(30,41,59,.12);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; color:var(--ink); background:
+  radial-gradient(circle at 10% 0%,#dbeafe 0,transparent 30%),
+  radial-gradient(circle at 90% 10%,#ede9fe 0,transparent 32%),var(--bg);
+  font-family:"Noto Sans Devanagari","Nirmala UI","Mangal",system-ui,sans-serif;
+}
+button,input{font:inherit}
+.app{max-width:760px;margin:auto;padding:12px 12px 80px}
+.hero{
+  position:relative; overflow:hidden; color:white; border-radius:26px; padding:24px 20px;
+  background:linear-gradient(135deg,#111827,#312e81 55%,#6d28d9);
+  box-shadow:var(--shadow); margin-bottom:12px;
+}
+.hero:after{content:"";position:absolute;width:180px;height:180px;border-radius:50%;right:-70px;top:-70px;background:rgba(255,255,255,.08)}
+.badge{display:inline-flex;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.14);font-size:12px;font-weight:800;letter-spacing:.4px}
+h1{font-size:clamp(25px,7vw,42px);margin:10px 0 2px;line-height:1.12}
+.hero p{margin:7px 0;color:#e0e7ff;font-size:14px}
+.teacher{font-weight:800;color:#fff}
+.nav{
+  display:flex;gap:7px;overflow:auto;padding:8px 2px 10px;position:sticky;top:0;z-index:20;
+  backdrop-filter:blur(14px);background:rgba(238,242,255,.82)
+}
+.nav button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:9px 13px;white-space:nowrap;font-weight:800;color:#334155}
+.nav button.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.panel{display:none}.panel.active{display:block}
+.card{background:var(--card);border:1px solid rgba(226,232,240,.9);border-radius:22px;padding:18px;box-shadow:var(--shadow);margin:12px 0}
+.section-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.section-title h2{font-size:21px;margin:0}
+.kicker{font-size:12px;color:var(--muted);font-weight:800}
+.goal{background:linear-gradient(135deg,#eef2ff,#faf5ff);border:1px solid #ddd6fe}
+.rule-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
+.rule{padding:13px;border-radius:16px;background:#f8fafc;border:1px solid var(--line);font-weight:800}
+.rule b{display:block;color:var(--primary);font-size:20px;margin-bottom:4px}
+.example{border:1px solid var(--line);border-radius:18px;padding:15px;margin:10px 0;background:#fff}
+.series{font-size:clamp(21px,6vw,30px);font-weight:900;letter-spacing:.5px;margin:5px 0 9px}
+.work{background:#f8fafc;border-radius:13px;padding:10px;color:#334155}
+.answer{color:var(--green);font-weight:900}
+.small{font-size:13px;color:var(--muted)}
+.test-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.progress{height:9px;background:#e2e8f0;border-radius:999px;overflow:hidden;margin:12px 0}
+.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--primary),var(--primary2));transition:.25s}
+.qno{color:var(--primary);font-weight:900;font-size:14px}
+.qseries{font-size:clamp(25px,7vw,36px);font-weight:900;text-align:center;padding:20px 8px}
+.options{display:grid;gap:10px}
+.opt{
+  border:2px solid #e2e8f0;background:#fff;border-radius:16px;padding:13px 14px;text-align:left;
+  cursor:pointer;transition:.15s;min-height:52px;font-weight:800;color:#1e293b
+}
+.opt:hover{border-color:#a5b4fc;transform:translateY(-1px)}
+.opt.selected{border-color:var(--primary);background:#eef2ff}
+.opt.correct{border-color:var(--green);background:#ecfdf5;color:#166534}
+.opt.wrong{border-color:var(--red);background:#fef2f2;color:#991b1b}
+.feedback{margin-top:12px;padding:13px;border-radius:15px;display:none}
+.feedback.show{display:block}
+.feedback.ok{background:#ecfdf5;color:#166534;border:1px solid #bbf7d0}
+.feedback.bad{background:#fef2f2;color:#991b1b;border:1px solid #fecaca}
+.hint{background:#fffbeb;border:1px solid #fde68a;color:#92400e}
+.explain{background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af}
+.actions{display:flex;gap:9px;margin-top:14px}
+.btn{
+  border:0;border-radius:14px;padding:12px 15px;font-weight:900;cursor:pointer;
+  background:#e2e8f0;color:#1e293b;flex:1
+}
+.btn.primary{background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff}
+.btn.success{background:var(--green);color:#fff}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.level{display:inline-flex;padding:5px 9px;border-radius:999px;font-size:11px;font-weight:900}
+.basic{background:#dcfce7;color:#166534}.reason{background:#dbeafe;color:#1e40af}.challenge{background:#fef3c7;color:#92400e}
+.field{display:grid;gap:6px;margin:10px 0}
+.field label{font-weight:900;font-size:13px}
+.field input{width:100%;padding:13px;border:2px solid var(--line);border-radius:14px;outline:none}
+.field input:focus{border-color:#818cf8}
+.score-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.stat{padding:14px;border-radius:16px;background:#f8fafc;text-align:center;border:1px solid var(--line)}
+.stat b{display:block;font-size:25px;color:var(--primary)}
+.certificate{
+  background:#fff;border:7px double #312e81;border-radius:20px;padding:25px 16px;text-align:center;
+  background-image:radial-gradient(circle at 50% 0,#eef2ff,transparent 38%)
+}
+.certificate h2{font-size:28px;margin:4px 0;color:#312e81}
+.certificate h3{margin:4px 0 16px}
+.cert-name{font-size:24px;font-weight:900;margin:20px 0;border-bottom:1px solid #94a3b8;padding-bottom:7px}
+.footer{text-align:center;color:var(--muted);font-size:12px;margin-top:20px}
+#fireworks{position:fixed;inset:0;pointer-events:none;z-index:100;display:none}
+.confetti{position:absolute;width:5px;height:13px;border-radius:2px;animation:fall 1.7s ease-out forwards}
+@keyframes fall{0%{transform:translate(0,0) rotate(0);opacity:1}100%{transform:translate(var(--x),var(--y)) rotate(720deg);opacity:0}}
+@media(min-width:650px){.app{padding-top:22px}.rule-grid{grid-template-columns:repeat(5,1fr)}}
+@media print{
+  body{background:#fff}.nav,.hero,#learn,#practice,#test,.footer,#fireworks{display:none!important}
+  #result{display:block!important}.card{box-shadow:none;border:0}.certificate{min-height:90vh;display:flex;flex-direction:column;justify-content:center}
+}
+</style>
+</head>
+<body>
+<div id="fireworks"></div>
+<div class="app">
+<header class="hero">
+  <span class="badge">🏅 QA CHECKED & ACCURATE • MAT-04</span>
+  <h1>🧠 NAVODAYA<br>LEARNING JOURNEY</h1>
+  <p>संख्या मालिका • Number Series</p>
+  <p class="teacher">Created by - Pravin Jadhav Sir</p>
+</header>
+
+<nav class="nav" aria-label="मुख्य विभाग">
+  <button class="active" data-tab="learn">📘 शिका</button>
+  <button data-tab="practice">📝 सराव</button>
+  <button data-tab="test">🏆 चाचणी</button>
+  <button data-tab="result">📊 गुणपत्रक</button>
+</nav>
+
+<main>
+<section id="learn" class="panel active">
+  <div class="card goal">
+    <div class="section-title"><h2>🎯 शिकण्याचे उद्दिष्ट</h2><span class="level basic">BASIC</span></div>
+    <p>दिलेल्या संख्यांमधील नियम शोधून पुढील संख्या अचूक ओळखणे.</p>
+  </div>
+
+  <div class="card">
+    <div class="section-title"><h2>⚡ संख्या मालिका सोडवण्याची क्लृप्ती</h2></div>
+    <div class="rule-grid">
+      <div class="rule"><b>1</b>+ / − फरक</div>
+      <div class="rule"><b>2</b>× / ÷</div>
+      <div class="rule"><b>3</b>वाढता / घटता फरक</div>
+      <div class="rule"><b>4</b>वर्ग / घन</div>
+      <div class="rule"><b>5</b>मागील दोन संख्यांवर आधारित नियम</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-title"><h2>📘 सोपी उदाहरणे</h2></div>
+    <div class="example"><span class="level basic">उदाहरण 1</span><div class="series">3, 6, 9, 12, ?</div><div class="work">+3, +3, +3<br><b>12 + 3 = 15</b></div><p class="answer">✅ उत्तर: 15</p></div>
+    <div class="example"><span class="level basic">उदाहरण 2</span><div class="series">2, 4, 8, 16, ?</div><div class="work">×2, ×2, ×2<br><b>16 × 2 = 32</b></div><p class="answer">✅ उत्तर: 32</p></div>
+    <div class="example"><span class="level basic">उदाहरण 3</span><div class="series">2, 5, 10, 17, 26, ?</div><div class="work">फरक: +3, +5, +7, +9<br>पुढील फरक = +11<br><b>26 + 11 = 37</b></div><p class="answer">✅ उत्तर: 37</p></div>
+  </div>
+
+  <div class="card">
+    <div class="section-title"><h2>🧩 स्तर समजून घ्या</h2></div>
+    <p><span class="level basic">BASIC</span> Q1–Q10 — समान फरक किंवा समान गुणोत्तर.</p>
+    <p><span class="level reason">REASONING</span> Q11–Q15 — वर्गसंख्या, वाढता फरक, भागाकार.</p>
+    <p><span class="level challenge">CHALLENGE</span> Q16–Q20 — मिश्र व मागील दोन संख्यांवर आधारित नियम.</p>
+    <button class="btn primary" onclick="go('test')">🚀 सराव चाचणी सुरू करा</button>
+  </div>
+</section>
+
+<section id="practice" class="panel">
+  <div class="card">
+    <div class="section-title"><h2>📝 सराव</h2><span class="kicker">नियम ओळखा</span></div>
+    <div id="practiceBox"></div>
+  </div>
+</section>
+
+<section id="test" class="panel">
+  <div class="card">
+    <div class="test-head">
+      <div><span class="qno" id="qNo">Q1 / 20</span><h2 id="levelTitle">Basic Level</h2></div>
+      <strong id="liveScore">0/20</strong>
+    </div>
+    <div class="progress"><i id="bar"></i></div>
+    <div class="qseries" id="qSeries"></div>
+    <div class="options" id="options"></div>
+    <div class="feedback" id="feedback"></div>
+    <div class="actions">
+      <button class="btn" id="hintBtn">💡 Hint</button>
+      <button class="btn primary" id="nextBtn" disabled>पुढील प्रश्न →</button>
+    </div>
+  </div>
+</section>
+
+<section id="result" class="panel">
+  <div class="card">
+    <div class="section-title"><h2>📊 गुणपत्रक</h2></div>
+    <div class="field"><label for="studentName">विद्यार्थ्याचे नाव</label><input id="studentName" placeholder="तुमचे नाव लिहा"></div>
+    <div class="score-grid">
+      <div class="stat"><span>बरोबर</span><b id="rCorrect">—</b></div>
+      <div class="stat"><span>चुकीचे</span><b id="rWrong">—</b></div>
+      <div class="stat"><span>गुण</span><b id="rMarks">—</b></div>
+      <div class="stat"><span>अचूकता</span><b id="rAcc">—</b></div>
+    </div>
+    <div class="card" style="margin-top:12px;background:#f8fafc">
+      <b>कामगिरी</b>
+      <p>🟢 18–20: उत्कृष्ट</p><p>🔵 15–17: उत्तम</p><p>🟡 10–14: सराव सुरू ठेवा</p><p>🔴 0–9: पुन्हा शिकून Retry करा</p>
+      <p><b>कमकुवत प्रकार:</b> ☐ फरक ☐ गुणाकार/भागाकार ☐ वाढता फरक ☐ वर्ग/घन ☐ मिश्र मालिका</p>
+    </div>
+    <button class="btn primary" onclick="finishCertificate()">🏅 प्रमाणपत्र तयार करा</button>
+    <button class="btn" onclick="restart()">🔄 पुन्हा चाचणी द्या</button>
+  </div>
+
+  <div class="card" id="certCard" style="display:none">
+    <div class="certificate" id="certificate">
+      <div>🏅 NAVODAYA LEARNING JOURNEY</div>
+      <h2>MAT-04 — संख्या मालिका</h2>
+      <h3>यशस्वीरीत्या पूर्ण केल्याबद्दल प्रमाणपत्र</h3>
+      <div class="cert-name" id="certName">विद्यार्थी</div>
+      <p><b>गुण:</b> <span id="certMarks"></span> / 20</p>
+      <p><b>अचूकता:</b> <span id="certAcc"></span></p>
+      <p style="margin-top:35px"><b>सौजन्य - श्री. प्रवीण वसंतराव जाधव</b><br>जि.प. केंद्रीय प्राथमिक शाळा, तालखेड<br>📞 9527672044</p>
+      <p style="margin-top:22px;color:#312e81;font-weight:900">🔒 QA Checked & Accurate</p>
+    </div>
+    <button class="btn primary" onclick="window.print()">🖨️ प्रमाणपत्र Print / Save PDF</button>
+  </div>
+</section>
+</main>
+<div class="footer">NAVODAYA LEARNING JOURNEY • MAT-04 • Created by - Pravin Jadhav Sir</div>
+</div>
+
+<script>
+const questions = [
+ {s:"5, 10, 15, 20, ?",o:["24","30","25","35"],a:2,h:["फरक पाहा.","20 नंतर 5 जोडा."],e:"प्रत्येक वेळी +5."},
+ {s:"40, 35, 30, 25, ?",o:["20","15","22","18"],a:0,h:["संख्या कमी होत आहेत.","प्रत्येक वेळी 5 कमी करा."],e:"प्रत्येक वेळी −5."},
+ {s:"3, 6, 12, 24, ?",o:["36","42","54","48"],a:3,h:["× / ÷ तपासा.","प्रत्येक संख्या 2 ने गुणा करा."],e:"प्रत्येक वेळी ×2."},
+ {s:"4, 8, 12, 16, ?",o:["18","20","22","24"],a:1,h:["फरक समान आहे का?","+4 हा नियम वापरा."],e:"प्रत्येक वेळी +4."},
+ {s:"2, 4, 6, 8, ?",o:["9","11","10","12"],a:2,h:["फरक पाहा.","8 मध्ये 2 मिळवा."],e:"प्रत्येक वेळी +2."},
+ {s:"50, 45, 40, 35, ?",o:["25","32","28","30"],a:3,h:["संख्या कमी होत आहेत.","प्रत्येक वेळी 5 कमी करा."],e:"प्रत्येक वेळी −5."},
+ {s:"5, 10, 20, 40, ?",o:["80","60","70","90"],a:0,h:["गुणाकार तपासा.","प्रत्येक वेळी ×2."],e:"प्रत्येक वेळी ×2."},
+ {s:"10, 13, 16, 19, ?",o:["21","22","23","24"],a:1,h:["फरक पाहा.","प्रत्येक वेळी 3 जोडा."],e:"प्रत्येक वेळी +3."},
+ {s:"100, 90, 80, 70, ?",o:["50","55","65","60"],a:3,h:["दहा-दहाने कमी होतेय.","70 मधून 10 वजा करा."],e:"प्रत्येक वेळी −10."},
+ {s:"7, 14, 21, 28, ?",o:["35","34","36","42"],a:0,h:["7 चे पटी तपासा.","28 मध्ये 7 मिळवा."],e:"प्रत्येक वेळी +7."},
+ {s:"1, 4, 9, 16, ?",o:["20","24","25","36"],a:2,h:["ही वर्गसंख्या मालिका आहे.","5² शोधा."],e:"1², 2², 3², 4²; पुढे 5² = 25."},
+ {s:"2, 5, 10, 17, 26, ?",o:["35","37","36","38"],a:1,h:["फरक लिहा.","+3, +5, +7, +9; पुढे +11."],e:"26 + 11 = 37."},
+ {s:"3, 7, 13, 21, 31, ?",o:["43","42","44","45"],a:0,h:["फरक पाहा.","+4, +6, +8, +10; पुढे +12."],e:"31 + 12 = 43."},
+ {s:"2, 6, 12, 20, 30, ?",o:["40","44","46","42"],a:3,h:["फरक वाढतो आहे.","+4, +6, +8, +10; पुढे +12."],e:"30 + 12 = 42."},
+ {s:"81, 27, 9, 3, ?",o:["2","0","1","6"],a:2,h:["भागाकार तपासा.","प्रत्येक वेळी 3 ने भागा."],e:"प्रत्येक वेळी ÷3; 3 ÷ 3 = 1."},
+ {s:"4, 7, 12, 19, 28, ?",o:["38","39","40","37"],a:1,h:["फरक लिहा.","+3, +5, +7, +9; पुढे +11."],e:"28 + 11 = 39."},
+ {s:"5, 11, 23, 47, ?",o:["94","96","93","95"],a:3,h:["×2 करून पहा.","प्रत्येक वेळी ×2 +1."],e:"47 × 2 + 1 = 95."},
+ {s:"2, 3, 5, 8, 13, ?",o:["19","20","21","22"],a:2,h:["मागील दोन संख्या पहा.","8 + 13 करा."],e:"पुढील संख्या = मागील दोन संख्यांची बेरीज; 8 + 13 = 21."},
+ {s:"100, 91, 79, 64, 46, ?",o:["24","25","23","22"],a:1,h:["फरक लिहा.","−9, −12, −15, −18; पुढे −21."],e:"46 − 21 = 25."},
+ {s:"6, 12, 24, 48, ?",o:["96","72","84","108"],a:0,h:["गुणाकार तपासा.","प्रत्येक वेळी ×2."],e:"प्रत्येक वेळी ×2; 48 × 2 = 96."}
+];
+const levels = i => i<10 ? ["Basic Level","basic"] : i<15 ? ["Reasoning Level","reason"] : ["Challenge Level","challenge"];
+let idx=0, score=0, answered=false, answers=[];
+const $=id=>document.getElementById(id);
+
+function go(tab){
+  document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));
+  document.querySelectorAll(".panel").forEach(p=>p.classList.toggle("active",p.id===tab));
+  if(tab==="test") renderQ();
+  if(tab==="result") updateResult();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+document.querySelectorAll(".nav button").forEach(b=>b.onclick=()=>go(b.dataset.tab));
+
+function renderQ(){
+  if(idx>=questions.length){go("result"); return;}
+  const q=questions[idx], [lt,lc]=levels(idx);
+  $("qNo").textContent=`Q${idx+1} / 20`;
+  $("levelTitle").innerHTML=`${lt} <span class="level ${lc}">${idx<10?"BASIC":idx<15?"REASONING":"CHALLENGE"}</span>`;
+  $("liveScore").textContent=`${score}/20`;
+  $("bar").style.width=((idx)/20*100)+"%";
+  $("qSeries").textContent=q.s;
+  $("options").innerHTML=q.o.map((x,i)=>`<button class="opt" data-i="${i}">${String.fromCharCode(65+i)}) ${x}</button>`).join("");
+  $("feedback").className="feedback";
+  $("feedback").innerHTML="";
+  $("nextBtn").disabled=true; answered=false;
+  document.querySelectorAll(".opt").forEach(b=>b.onclick=()=>choose(+b.dataset.i));
+  $("hintBtn").onclick=()=>showHint();
+}
+function showHint(){
+  const q=questions[idx], fb=$("feedback");
+  fb.className="feedback show hint";
+  fb.innerHTML=`💡 <b>Hint 1:</b> ${q.h[0]}<br>💡 <b>Hint 2:</b> ${q.h[1]}`;
+}
+function choose(i){
+  if(answered)return; answered=true;
+  const q=questions[idx], opts=document.querySelectorAll(".opt");
+  opts.forEach((b,n)=>{if(n===q.a)b.classList.add("correct"); if(n===i && i!==q.a)b.classList.add("wrong");});
+  if(i===q.a){score++; $("feedback").className="feedback show ok"; $("feedback").innerHTML=`🟢 <b>बरोबर!</b><br>${q.e}`;}
+  else {$("feedback").className="feedback show bad"; $("feedback").innerHTML=`🔴 <b>चुकीचे.</b> योग्य उत्तर: <b>${String.fromCharCode(65+q.a)}) ${q.o[q.a]}</b><br>🧩 ${q.e}<br><button class="btn" style="margin-top:8px" onclick="retryCurrent()">🔄 पुन्हा सोडवा</button>`;}
+  answers[idx]=i;
+  $("liveScore").textContent=`${score}/20`;
+  $("nextBtn").disabled=false;
+}
+function retryCurrent(){
+  const q=questions[idx];
+  document.querySelectorAll(".opt").forEach(b=>b.classList.remove("correct","wrong","selected"));
+  $("feedback").className="feedback";
+  $("nextBtn").disabled=true; answered=false;
+}
+$("nextBtn").onclick=()=>{idx++;renderQ();};
+
+function updateResult(){
+  const done=answers.length===20 && answers.every(v=>v!==undefined);
+  $("rCorrect").textContent=done?score:"—";
+  $("rWrong").textContent=done?20-score:"—";
+  $("rMarks").textContent=done?score+" / 20":"—";
+  $("rAcc").textContent=done?Math.round(score/20*100)+" %":"—";
+}
+function finishCertificate(){
+  if(answers.length<20){alert("प्रथम सर्व 20 प्रश्न पूर्ण करा.");go("test");return;}
+  const name=$("studentName").value.trim()||"विद्यार्थी";
+  $("certName").textContent=name;
+  $("certMarks").textContent=score;
+  $("certAcc").textContent=Math.round(score/20*100)+" %";
+  $("certCard").style.display="block";
+  if(score>=18) fireworks();
+}
+function restart(){
+  idx=0;score=0;answers=[];$("certCard").style.display="none";go("test");
+}
+function fireworks(){
+  const f=$("fireworks");f.innerHTML="";f.style.display="block";
+  for(let i=0;i<90;i++){
+    const c=document.createElement("i");c.className="confetti";
+    c.style.left="50%";c.style.top="42%";
+    c.style.background=["#f59e0b","#22c55e","#38bdf8","#f43f5e","#a78bfa"][i%5];
+    c.style.setProperty("--x",(Math.random()*110-55)+"vw");
+    c.style.setProperty("--y",(Math.random()*90-25)+"vh");
+    c.style.animationDelay=(Math.random()*.3)+"s";f.appendChild(c);
+  }
+  setTimeout(()=>{f.style.display="none"},2200);
+}
+const practice=[
+ ["6, 12, 18, 24, ?","+6","30"],
+ ["30, 25, 20, 15, ?","−5","10"],
+ ["3, 9, 27, 81, ?","×3","243"],
+ ["1, 4, 9, 16, ?","वर्गसंख्या","25"],
+ ["2, 4, 6, 10, 16, ?","मागील दोन संख्यांची बेरीज?","26"]
+];
+$("practiceBox").innerHTML=practice.map((p,i)=>`<div class="example"><span class="level ${i<3?"basic":"reason"}">सराव ${i+1}</span><div class="series">${p[0]}</div><p><b>नियम:</b> ${p[1]}</p><p class="answer">उत्तर: ${p[2]}</p></div>`).join("");
+updateResult();
+</script>
+</body>
+</html>
